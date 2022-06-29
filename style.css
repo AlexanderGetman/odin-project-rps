@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    font-size: 62.5%;
+}
+
+body {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;    
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    padding: 5rem 0;
+    gap: 1rem;
+}
+
+input {
+    font-size: 2rem;
+    max-width: 20rem;
+}
+
+.start, .text-boxes {
+    font-size: 5rem;
+}

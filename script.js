@@ -1,55 +1,64 @@
 let shapes = ["rock", "paper", "scissors"];
+const btns = document.querySelectorAll('input');
+
+function disableButtons() {
+    btns.forEach(btn => {
+        btn.disabled = true
+    })
+}
+
+let scorePlayer = 0;
+let scoreComputer = 0;
+let currentResult = '';
 
 let computerPlay = () => shapes[Math.floor(Math.random() * shapes.length)];
 
-function playerPlay() {
-    let selection = prompt("Please enter your choice:").toLowerCase();
-    switch (selection) {
-        case "rock":
-        case "paper":
-        case "scissors":
-            return selection;
-            break;
-        default:
-            return playerPlay();
-    }
+let selection;
+
+function processClick(btn) {
+    document.getElementsByClassName('start')[0].style.visibility = "hidden";
+    selection = btn.value;
+    game();
+    return selection;
 }
 
 function playRound(playerSelection, computerSelection) {
-    let winning_combinations = ["rock, scissors", "paper, rock", "scissors, paper"];
+    let winningCombinations = ["rock, scissors", "paper, rock", "scissors, paper"];
     let combination = playerSelection + ", " + computerSelection;
     if (playerSelection == computerSelection) {
-        return "Draw!";
+        return `Draw! - both selected ${playerSelection}`;
     }
 
-    if (winning_combinations.includes(combination)) {
+    if (winningCombinations.includes(combination)) {
         return `You Win! ${playerSelection} beats ${computerSelection}!`
     } else {
         return `You Lose! ${computerSelection} beats ${playerSelection}!`
     }
 }
 
-function game() {
-    let score_player = 0;
-    let score_computer = 0;
+function game() { 
+    let computerSelection = computerPlay();
+    let playerSelection = selection;
+    let currentResult = playRound(playerSelection, computerSelection);
+    document.getElementById('currentResult').innerHTML = currentResult;
 
-    for (let i = 0; i < 5; i++) {
-        let computerSelection = computerPlay();
-        let playerSelection = playerPlay();
-        let current_result = playRound(playerSelection, computerSelection);
-        console.log(current_result);
+    if (currentResult.includes("Win!")) scorePlayer += 1
+    else if (currentResult.includes("Lose!")) scoreComputer += 1;
 
-        if (current_result.includes("Win!")) score_player += 1
-        else if (current_result.includes("Lose!")) score_computer += 1;
+    document.getElementById('total').innerHTML = `Current results: Your score - ${scorePlayer}, Computer score - ${scoreComputer}`;
+    
 
-        console.log(`Current results: Your score - ${score_player}, Computer score - ${score_computer}`)
+    if (scorePlayer == 5 || scoreComputer == 5) {
+        let gameOver = '';
+
+        if (scorePlayer > scoreComputer) gameOver = "Congratulations, you did it!"
+        else if (scorePlayer < scoreComputer) gameOver = "Sorry, better luck next time!"
+        else gameOver = "It's a draw!";
+
+        gameOver = gameOver + " Please reload the page to repeat the game!"
+        document.getElementById('gameOver').innerHTML = gameOver;
+
+        document.getElementById('total').innerHTML = `Final score: Your score - ${scorePlayer}, Computer score - ${scoreComputer}`;
+        disableButtons()
     }
-
-    if (score_player > score_computer) console.log("Congratulations, you did it!")
-    else if (score_player < score_computer) console.log("Sorry, better luck next time!")
-    else console.log("It's a draw!");
-
-    console.log(`Final score: Your score - ${score_player}, Computer score - ${score_computer}`)
 }
-
-game();
